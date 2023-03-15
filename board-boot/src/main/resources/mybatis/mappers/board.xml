@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+           "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.or.kosa.board.boot.dao.board.BoardDAO">
+
+	<select id="listBoard" resultType="BoardVO">
+		SELECT  
+			 id 
+			,title
+			,content
+			,read_cnt
+			,register_id
+			,register_time
+			,update_time
+		FROM  board 
+	</select>
+
+	<select id="findById" resultType="BoardVO">
+		SELECT  
+			 id 
+			,title
+			,content
+			,read_cnt
+			,register_id
+			,register_time
+			,update_time
+		FROM  board 
+		where id=#{id}
+	</select>
+
+
+	<insert id="insertBoard">
+		<selectKey order="AFTER" keyColumn="id" keyProperty="id" resultType="long">
+			select LAST_INSERT_ID()
+		</selectKey>
+		
+		insert into board (
+			 title
+			,content
+			,register_id
+		) values (
+			 #{title}
+			,#{content}
+			,#{register_id}
+		) 
+	</insert>
+
+	<update id="updateBoard">
+		update board set 
+			 title = #{title}
+			,content= #{content}
+		where id=#{id} 
+	</update>
+	
+	<update id="updateBoardReadCntInc">
+		update board set 
+			 read_cnt = read_cnt + 1
+		where id=#{id} 
+	</update>
+	
+	<delete id="deleteById">
+		delete from board  
+		where id=#{id} 
+	</delete>
+
+
+	<delete id="deleteBoard">
+		delete from board  
+		where id in 
+		<foreach item="id" open="(" separator="," close=")" collection="deleteIdList">
+			#{id}
+		</foreach> 
+	</delete>
+
+
+</mapper>
